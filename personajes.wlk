@@ -1,7 +1,7 @@
 object fireboy
 {
 	var property position = game.at(0,0)
-    var posicionAnt = null
+    var property posicionAnt = null
 	var cantSaltos = 0
 	method image() = "fireboy6.png"
 	method movIzquierda()
@@ -28,7 +28,11 @@ object fireboy
 		}
 	}
     method retroceder() {
-      position = posicionAnt
+      position = game.at(position.x(), 0.max(position.y()-1))
+    }
+    method quedarse(nuevaY) 
+    {
+        position = game.at(position.x(), nuevaY+1)
     }
 }
 

@@ -23,6 +23,7 @@ program FireboyAndWatergirl {
 	keyboard.d().onPressDo({watergirl.movDerecha()})
 
 	game.whenCollideDo(fireboy, {elemento =>
+	
 		elemento.tratarColision(fireboy)
 	})
 

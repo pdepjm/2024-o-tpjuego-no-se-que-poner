@@ -1,16 +1,30 @@
 import wollok.game.*
+import mapa.*
+import personajes.*
 
-import pepita.*
 
-program PepitaGame {
-	game.title("Pepita")
-	game.height(10)
-	game.width(10)
-	game.cellSize(100)
 
-	game.addVisual(pepita)
+program FireboyAndWatergirl {
+	game.title("Fireboy and Watergirl")
+	game.height(16)
+	game.width(15)
+	game.cellSize(80)
+	game.boardGround("bg.png")
+	game.addVisual(fireboy)
+	game.addVisual(watergirl)
+	mapa.inciar()
 
-	keyboard.w().onPressDo({ pepita.fly(1) })
+	keyboard.left().onPressDo({fireboy.movIzquierda()})
+	keyboard.right().onPressDo({fireboy.movDerecha()})
+	keyboard.up().onPressDo({fireboy.movSaltar()})
+
+	keyboard.w().onPressDo({watergirl.movSaltar()})
+	keyboard.a().onPressDo({watergirl.movIzquierda()})
+	keyboard.d().onPressDo({watergirl.movDerecha()})
+
+	game.whenCollideDo(fireboy, {elemento =>
+		elemento.tratarColision(fireboy)
+	})
 
 	game.start()
 }

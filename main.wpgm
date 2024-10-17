@@ -13,6 +13,7 @@ program FireboyAndWatergirl {
 	keyboard.left().onPressDo({fireboy.movIzquierda()})
 	keyboard.right().onPressDo({fireboy.movDerecha()})
 	keyboard.up().onPressDo({fireboy.movSaltar()})
+	keyboard.down().onPressDo({fireboy.presionar()})
 
 	keyboard.w().onPressDo({watergirl.movSaltar()})
 	keyboard.a().onPressDo({watergirl.movIzquierda()})

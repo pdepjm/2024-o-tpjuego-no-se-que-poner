@@ -62,7 +62,7 @@ class Personaje {
 		if(self.dentroDeLosLimites(posicion))
 		{
 			const posiblesObjetos = game.getObjectsIn(posicion)
-			return posiblesObjetos.all({ objeto => objeto.tipo() != "BloqueTierra" })  	
+			return posiblesObjetos.all({ objeto => objeto.tipo() != "BloqueTierra" && objeto.tipo() != "Elevador" })  	
 		}
 		else return false
 	}
@@ -74,10 +74,15 @@ class Personaje {
 	}
 }
 
-object fireboy inherits Personaje (position = game.at(0, 0)) {
+object fireboy inherits Personaje (position = game.at(4, 7)) {
 	method image() = "fireboy6.png"
 	method tocarFuego(){}
 	method tocarAgua(){ self.morir()}
+	method presionar()
+	{
+		const presionable = game.getObjectsIn(self.position()).head()
+		if(presionable.tipo() == "Elemento") presionable.activar()  
+	}
 }
 
 object watergirl inherits Personaje (position = game.at(0, 2)) {

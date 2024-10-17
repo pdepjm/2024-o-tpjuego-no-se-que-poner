@@ -3,6 +3,7 @@ class Personaje {
 	var cantSaltos = 0
 	var estaSaltando = false
 	method tipo() = "personaje"
+	method tratarColision() {}
 	
 	method moverse(nuevaPosicion) 
 	{
@@ -24,6 +25,7 @@ class Personaje {
 	method movSubir() 
 	{
 		self.moverse(position.up(1))
+		game.sound("salto.ogg").play()
 		estaSaltando = true
 	}
 	
@@ -85,7 +87,7 @@ object fireboy inherits Personaje (position = game.at(4, 7)) {
 	}
 }
 
-object watergirl inherits Personaje (position = game.at(0, 2)) {
+object watergirl inherits Personaje (position = game.at(3, 7)) {
 	method image() = "watergirl3.png"
 	method tocarFuego(){self.morir()}
 	method tocarAgua(){}

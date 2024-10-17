@@ -16,6 +16,7 @@ class Elevador inherits Elemento
     method activarse()
     {
         if(activado) self.subir() else self.bajar()
+        game.sound("elevador.ogg").play()
     }
 
     method bajar()
@@ -31,14 +32,36 @@ class Elevador inherits Elemento
     }
 }
 
-const elevadorPorBoton = new Elevador (position = game.at(14, 9))
+object elevadorPorBoton inherits Elevador (position = game.at(14, 9))
+{
+    override method bajar()
+    {
+        position = game.at(14,8)
+        activado = true
+    }
+
+    override method subir()
+    {
+        position = game.at(14,9)
+        activado = false
+    }
+}
 
 const elevadorPorPalanca = new Elevador (position = game.at(0, 6))
 
 object boton inherits Elemento (position = game.at(5, 7))
 {
+
     method image() = "boton.png"
-    method tratarColision(personaje) {}
+    method tratarColision(personaje) {
+    }
+
+    method estaPresionado()
+    {
+        const posibles = game.getObjectsIn(self.position())
+        if(posibles.any({objeto => objeto.tipo() == "personaje"})) elevadorPorBoton.bajar()
+        else elevadorPorBoton.subir()      
+    }
 }
 
 object palanca inherits Elemento (position = game.at(3, 4))
@@ -49,6 +72,7 @@ object palanca inherits Elemento (position = game.at(3, 4))
 
     method activar() {
        elevadorPorPalanca.activarse()
+       game.sound("activar.ogg").play()
     }
 }
 

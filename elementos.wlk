@@ -51,7 +51,7 @@ const elevadorPorPalanca = new Elevador (position = game.at(0, 6))
 
 class Boton inherits Elemento 
 {
-    method image() = "boton.png"
+    method image() = "boton2.png"
     method tratarColision(personaje) {
     }
 

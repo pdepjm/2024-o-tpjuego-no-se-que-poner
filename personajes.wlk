@@ -71,23 +71,24 @@ class Personaje {
 
 	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
 
-	method morir(){
-	  game.removeVisual(self)
-	}
-}
-
-object fireboy inherits Personaje (position = game.at(4, 7)) {
-	method image() = "fireboy6.png"
-	method tocarFuego(){}
-	method tocarAgua(){ self.morir()}
 	method presionar()
 	{
 		const presionable = game.getObjectsIn(self.position()).head()
 		if(presionable.tipo() == "Elemento") presionable.activar()  
 	}
+
+	method morir(){
+	  game.removeVisual(self)
+	}
 }
 
-object watergirl inherits Personaje (position = game.at(3, 7)) {
+object fireboy inherits Personaje (position = game.at(0, 0)) {
+	method image() = "fireboy6.png"
+	method tocarFuego(){}
+	method tocarAgua(){ self.morir()}
+}
+
+object watergirl inherits Personaje (position = game.at(0, 2)) {
 	method image() = "watergirl3.png"
 	method tocarFuego(){self.morir()}
 	method tocarAgua(){}

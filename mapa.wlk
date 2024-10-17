@@ -30,7 +30,6 @@ object mapa
 		self.crearBloques(1, 13, 14, fabricaBloqueTierra)
 		self.crearBloques(2, 6, 11, fabricaBloqueTierra)
 		self.crearBloques(3, 0, 4, fabricaBloqueTierra)
-        self.crearBloques(5, 7, 10, fabricaBloqueTierra)
 		self.crearBloques(6, 2, 14, fabricaBloqueTierra)
 		self.crearBloques(9, 0, 12,  fabricaBloqueTierra)
 		self.crearBloques(12, 0, 1, fabricaBloqueTierra)
@@ -42,6 +41,8 @@ object mapa
         self.crearBloques(0, 5, 6, fabricaBloqueFuego)
 		self.crearBloques(0, 9, 10, fabricaBloqueAgua)
 		self.crearBloques(3, 8, 9, fabricaBloqueAcido)
+        self.crearBloques(5, 7, 10, fabricaBloquePinchos)
+
     }
 
 	method inciar() 
@@ -71,6 +72,11 @@ object fabricaBloqueFuego {
 
 object fabricaBloqueAcido {
     method crearBloque() = new BloqueAcido()
+}
+
+object fabricaBloquePinchos
+{
+    method crearBloque() = new BloquePinchos()
 }
 
 class BloqueTierra
@@ -119,5 +125,18 @@ class BloqueAcido
     {
         personaje.morir()
     }
+}
+
+class BloquePinchos
+{
+    var property position = game.at(0,0)
+    method image() = "bloquePinchos.png"
+    method tipo() = "BloquePinchos"
+
+    method tratarColision(personaje)
+    {
+        personaje.morir()
+    }
+
 }
 

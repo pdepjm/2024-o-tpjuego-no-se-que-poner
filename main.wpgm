@@ -1,7 +1,7 @@
 import wollok.game.*
 import mapa.*
 import personajes.*
-import elementos.boton
+import elementos.*
 
 
 
@@ -28,8 +28,7 @@ program FireboyAndWatergirl {
 		elemento.tratarColision(watergirl)
 	})
 
-	game.onTick(1000, "Chequear boton", {boton.estaPresionado()})
-
+	game.onTick(1000, "Chequear boton", {botonAbajo.chequearBoton()})
 
 	const soundtrack = game.sound("soundtrack.ogg")
   	soundtrack.shouldLoop(true)

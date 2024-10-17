@@ -14,7 +14,8 @@ object mapa
 
     method agregarElementos() 
     {
-        game.addVisual(boton)
+        game.addVisual(botonAbajo)
+        game.addVisual(botonArriba)
         game.addVisual(palanca)
         game.addVisual(elevadorPorBoton)
         game.addVisual(elevadorPorPalanca)
@@ -29,6 +30,7 @@ object mapa
 		self.crearBloques(1, 13, 14, fabricaBloqueTierra)
 		self.crearBloques(2, 6, 11, fabricaBloqueTierra)
 		self.crearBloques(3, 0, 4, fabricaBloqueTierra)
+        self.crearBloques(5, 7, 10, fabricaBloqueTierra)
 		self.crearBloques(6, 2, 14, fabricaBloqueTierra)
 		self.crearBloques(9, 0, 12,  fabricaBloqueTierra)
 		self.crearBloques(12, 0, 1, fabricaBloqueTierra)

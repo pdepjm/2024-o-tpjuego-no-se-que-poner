@@ -3,7 +3,7 @@ class Personaje {
 	var cantSaltos = 0
 	var estaSaltando = false
 	method tipo() = "personaje"
-	method tratarColision() {}
+	method tratarColision(personaje) {}
 	
 	method moverse(nuevaPosicion) 
 	{

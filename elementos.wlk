@@ -49,9 +49,8 @@ object elevadorPorBoton inherits Elevador (position = game.at(14, 9))
 
 const elevadorPorPalanca = new Elevador (position = game.at(0, 6))
 
-object boton inherits Elemento (position = game.at(5, 7))
+class Boton inherits Elemento 
 {
-
     method image() = "boton.png"
     method tratarColision(personaje) {
     }
@@ -59,9 +58,22 @@ object boton inherits Elemento (position = game.at(5, 7))
     method estaPresionado()
     {
         const posibles = game.getObjectsIn(self.position())
-        if(posibles.any({objeto => objeto.tipo() == "personaje"})) elevadorPorBoton.bajar()
-        else elevadorPorBoton.subir()      
+        return posibles.any({objeto => objeto.tipo() == "personaje"})
     }
+
+
+}
+
+object botonAbajo inherits Boton (position = game.at(5, 7))
+{
+    method chequearBoton()
+    {
+        if(self.estaPresionado() || botonArriba.estaPresionado()) elevadorPorBoton.bajar()
+        else elevadorPorBoton.subir()
+    }
+}
+object botonArriba inherits Boton (position = game.at(10, 10))
+{
 }
 
 object palanca inherits Elemento (position = game.at(3, 4))

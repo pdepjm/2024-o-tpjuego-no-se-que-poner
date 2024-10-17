@@ -23,9 +23,20 @@ program FireboyAndWatergirl {
 	keyboard.d().onPressDo({watergirl.movDerecha()})
 
 	game.whenCollideDo(fireboy, {elemento =>
-	
 		elemento.tratarColision(fireboy)
 	})
 
+	game.whenCollideDo(watergirl, {elemento =>
+		elemento.tratarColision(watergirl)
+	})
+
+
+
+	game.onTick(500, "caeWaterGirl", {watergirl.caer()})
+
+	game.onTick(500, "caeFireBoy", {fireboy.caer()})
+
 	game.start()
+
+
 }

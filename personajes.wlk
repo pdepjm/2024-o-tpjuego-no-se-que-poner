@@ -1,5 +1,6 @@
 class Personaje {
 	var property position
+	var property estaMuerto = false
 	var cantSaltos = 0
 	var estaSaltando = false
 	method tipo() = "personaje"
@@ -78,7 +79,9 @@ class Personaje {
 	}
 
 	method morir(){
-	  game.removeVisual(self)
+		if(!estaMuerto) game.sound("morir.ogg").play()	
+	  	game.removeVisual(self)
+		estaMuerto = true
 	}
 }
 

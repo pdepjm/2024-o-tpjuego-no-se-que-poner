@@ -5,14 +5,10 @@ import personajes.*
 
 
 program FireboyAndWatergirl {
-	game.title("Fireboy and Watergirl")
-	game.height(16)
-	game.width(15)
-	game.cellSize(50)
-	game.boardGround("bg.png")
+
+	mapa.inciar()
 	game.addVisual(fireboy)
 	game.addVisual(watergirl)
-	mapa.inciar()
 
 	keyboard.left().onPressDo({fireboy.movIzquierda()})
 	keyboard.right().onPressDo({fireboy.movDerecha()})
@@ -30,13 +26,5 @@ program FireboyAndWatergirl {
 		elemento.tratarColision(watergirl)
 	})
 
-
-
-	game.onTick(500, "caeWaterGirl", {watergirl.caer()})
-
-	game.onTick(500, "caeFireBoy", {fireboy.caer()})
-
 	game.start()
-
-
 }

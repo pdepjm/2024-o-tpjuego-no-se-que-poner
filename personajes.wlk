@@ -1,123 +1,87 @@
-object fireboy
-{
-	var property position = game.at(1,0)
-    var property posicionAnt = game.at(1,0)
+class Personaje {
+	var property position
 	var cantSaltos = 0
+	var estaSaltando = false
+	method tipo() = "personaje"
 	
-	method image() = "fireboy6.png"
-	
-	method movIzquierda()
+	method moverse(nuevaPosicion) 
 	{
-        self.actualizarPosicionAnt()
-		position = position.left(1)
+		if (self.puedeMoverse(nuevaPosicion)) position = nuevaPosicion
 	}
 	
-	method movDerecha()
+	method movIzquierda() 
 	{
-        self.actualizarPosicionAnt()
-		position = position.right(1)
+		self.moverse(position.left(1))
+		if(!estaSaltando) self.caer()
 	}
 	
-	method movSaltar()
+	method movDerecha() 
 	{
-		if(cantSaltos < 2)
-		{
-			self.actualizarPosicionAnt()
-			position = position.up(1)
+		self.moverse(position.right(1))
+		if(!estaSaltando)self.caer()
+	}
+	
+	method movSubir() 
+	{
+		self.moverse(position.up(1))
+		estaSaltando = true
+	}
+	
+	method movBajar() 
+	{
+		self.moverse(position.down(1))
+		estaSaltando = false
+	}
+	
+	method movSaltar() 
+	{
+		if (cantSaltos < 2) {
+			self.movSubir()
 			cantSaltos += 1
 			game.schedule(800, {
-				position = position.down(1)
-				if(cantSaltos==2) cantSaltos = 0	
+				self.movBajar()
+				if (cantSaltos == 2) cantSaltos = 0
 			})
 		}
 	}
+	
+	method caer() 
+	{
+   		const posicionAnt = self.position()
+		var puedeBajar = true
     
-	method retroceder() {
-      position = self.posicionAnt()
-    }
+    	(1..4).forEach { y =>
+			if (self.puedeMoverse(posicionAnt.down(y)) && puedeBajar) position = posicionAnt.down(y)
+			else puedeBajar = false
 
-	method actualizarPosicionAnt(){
-		posicionAnt = position
+    	}
 	}
 	
-	method caer() {
-		self.actualizarPosicionAnt()
-		position = position.down(1)
-	}
-	
-    method tratarColision(watergirl) {
-		self.kill()
-		watergirl.kill()
-	}
-
-	method kill(){
-		position = game.at(1,0)
-		posicionAnt = game.at(1,0)
-		game.say(watergirl,"Jaja ripeo el otro")
-		game.say(self,"wahhhah me MORI")
-
+	method puedeMoverse(posicion) 
+	{
+		if(self.dentroDeLosLimites(posicion))
+		{
+			const posiblesObjetos = game.getObjectsIn(posicion)
+			return posiblesObjetos.all({ objeto => objeto.tipo() != "BloqueTierra" })  	
+		}
+		else return false
 	}
 
-	method tratarColisionBloqueFuego() {}
-	method tratarColisionBloqueAgua() {self.kill()}
+	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
+
+	method morir(){
+	  game.removeVisual(self)
+	}
 }
 
-object watergirl
-{
-	var property position = game.at(1,2)
-	var property posicionAnt = game.at(1,2)
-	var cantSaltos = 0
+object fireboy inherits Personaje (position = game.at(0, 0)) {
+	method image() = "fireboy6.png"
+	method tocarFuego(){}
+	method tocarAgua(){ self.morir()}
+}
+
+object watergirl inherits Personaje (position = game.at(0, 2)) {
 	method image() = "watergirl3.png"
-	method movIzquierda()
-	{
-		self.actualizarPosicionAnt()
-		position = position.left(1)
-	}
-	method movDerecha()
-	{
-		self.actualizarPosicionAnt()
-		position = position.right(1)
-	}
-	method movSaltar()
-	{
-		if(cantSaltos < 2)
-		{
-			self.actualizarPosicionAnt()
-			position = position.up(1)
-			cantSaltos += 1
-			game.schedule(800, {
-				if(cantSaltos==2) cantSaltos = 0	
-			})
-		}
-	}
-	method actualizarPosicionAnt(){
-		posicionAnt = position
-	}
-	method retroceder() {
-	  position = self.posicionAnt()
-	}
-
-	method caer() {
-		self.actualizarPosicionAnt()
-		position = position.down(1)
-	}
-	
-	method tratarColision(fireboy) {
-		self.kill()
-		fireboy.kill()
-	}
-
-	
-	
-	method kill(){
-		position = game.at(1,2)
-		posicionAnt = game.at(1,2)
-		game.say(fireboy,"Jaja ripeo la otra")
-		game.say(self,"wahhhah me MORI")
-		
-	}
-
-	method tratarColisionBloqueFuego() {self.kill()}
-	method tratarColisionBloqueAgua() {}
-
+	method tocarFuego(){self.morir()}
+	method tocarAgua(){}
 }

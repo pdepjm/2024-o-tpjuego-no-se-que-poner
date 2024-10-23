@@ -1,9 +1,9 @@
 class Personaje {
 	var property position
-	var property estaMuerto = false
 	var cantSaltos = 0
+	var property estaMuerto = false
 	var estaSaltando = false
-	method tipo() = "personaje"
+	method tipo() = "Personaje"
 	method tratarColision(personaje) {}
 	
 	method moverse(nuevaPosicion) 
@@ -30,19 +30,14 @@ class Personaje {
 		estaSaltando = true
 	}
 	
-	method movBajar() 
-	{
-		self.moverse(position.down(1))
-		estaSaltando = false
-	}
-	
 	method movSaltar() 
 	{
 		if (cantSaltos < 2) {
 			self.movSubir()
 			cantSaltos += 1
 			game.schedule(800, {
-				self.movBajar()
+				self.caer()
+				estaSaltando = false
 				if (cantSaltos == 2) cantSaltos = 0
 			})
 		}
@@ -56,18 +51,13 @@ class Personaje {
     	(1..4).forEach { y =>
 			if (self.puedeMoverse(posicionAnt.down(y)) && puedeBajar) position = posicionAnt.down(y)
 			else puedeBajar = false
-
     	}
 	}
 	
 	method puedeMoverse(posicion) 
 	{
-		if(self.dentroDeLosLimites(posicion))
-		{
-			const posiblesObjetos = game.getObjectsIn(posicion)
-			return posiblesObjetos.all({ objeto => objeto.tipo() != "BloqueTierra" && objeto.tipo() != "Elevador" })  	
-		}
-		else return false
+		const posiblesObjetos = game.getObjectsIn(posicion)
+		return posiblesObjetos.all({ objeto => objeto.tipo() != "NoColisionable" }) && self.dentroDeLosLimites(posicion)
 	}
 
 	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
@@ -75,7 +65,7 @@ class Personaje {
 	method presionar()
 	{
 		const presionable = game.getObjectsIn(self.position()).head()
-		if(presionable.tipo() == "Elemento") presionable.activar()  
+		if(presionable.tipo() == "Presionable") presionable.activar()  
 	}
 
 	method morir(){

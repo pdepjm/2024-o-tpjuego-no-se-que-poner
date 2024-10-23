@@ -10,8 +10,7 @@ class Elevador inherits Elemento
 {
     var activado = false
     method image() = "elevador2.png"
-    override method tipo() = "Elevador"
-    method tratarColision(personaje) {}
+    override method tipo() = "NoColisionable"
 
     method activarse()
     {
@@ -36,14 +35,23 @@ object elevadorPorBoton inherits Elevador (position = game.at(14, 9))
 {
     override method bajar()
     {
-        position = game.at(14,8)
-        activado = true
+        if(!activado)
+        {
+            position = game.at(14,8)
+            game.sound("elevador.ogg").play()
+            activado = true
+        }
     }
 
     override method subir()
     {
-        position = game.at(14,9)
-        activado = false
+        if(activado)
+        {
+            position = game.at(14,9)
+            game.sound("elevador.ogg").play()
+            activado = false
+        }
+        
     }
 }
 
@@ -52,16 +60,13 @@ const elevadorPorPalanca = new Elevador (position = game.at(0, 6))
 class Boton inherits Elemento 
 {
     method image() = "boton2.png"
-    method tratarColision(personaje) {
-    }
+    method tratarColision(personaje) {}
 
     method estaPresionado()
     {
         const posibles = game.getObjectsIn(self.position())
-        return posibles.any({objeto => objeto.tipo() == "personaje"})
+        return posibles.any({objeto => objeto.tipo() == "Personaje"})
     }
-
-
 }
 
 object botonAbajo inherits Boton (position = game.at(5, 7))
@@ -78,6 +83,7 @@ object botonArriba inherits Boton (position = game.at(10, 10))
 
 object palanca inherits Elemento (position = game.at(3, 4))
 {
+    override method tipo() = "Presionable"
     method image() = "palanca.png"
     
     method tratarColision(personaje){}
@@ -91,7 +97,7 @@ object palanca inherits Elemento (position = game.at(3, 4))
 object cubo inherits Elemento (position = game.at(6, 10))
 {
     method image() = "cubo.png"
-    method tratarColision(personaje) {}
+    override method tipo() = "NoColisionable"
 }
 
 object puertaFuego inherits Elemento (position = game.at(12, 14))

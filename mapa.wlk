@@ -84,10 +84,7 @@ class BloqueTierra
     var property position = game.at(0,0)
 	method image() = "bloqueTierra2.png"
 
-    method tipo() = "BloqueTierra" 
-    method tratarColision(personaje) 
-    {
-    }
+    method tipo() = "NoColisionable" 
 } 
 
 class BloqueFuego

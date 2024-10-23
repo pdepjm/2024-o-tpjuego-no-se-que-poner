@@ -19,15 +19,10 @@ program FireboyAndWatergirl {
 	keyboard.w().onPressDo({watergirl.movSaltar()})
 	keyboard.a().onPressDo({watergirl.movIzquierda()})
 	keyboard.d().onPressDo({watergirl.movDerecha()})
+	keyboard.s().onPressDo({watergirl.presionar()})
 
-	game.whenCollideDo(fireboy, {elemento =>
-		elemento.tratarColision(fireboy)
-	})
-
-	game.whenCollideDo(watergirl, {elemento =>
-		elemento.tratarColision(watergirl)
-	})
-
+	game.whenCollideDo(fireboy, {elemento => elemento.tratarColision(fireboy)})
+	game.whenCollideDo(watergirl, {elemento => elemento.tratarColision(watergirl)})
 	game.onTick(1000, "Chequear boton", {botonAbajo.chequearBoton()})
 
 	const soundtrack = game.sound("soundtrack.ogg")

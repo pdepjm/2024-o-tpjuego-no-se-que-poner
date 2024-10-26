@@ -51,7 +51,6 @@ object elevadorPorBoton inherits Elevador (position = game.at(14, 9))
             game.sound("elevador.ogg").play()
             activado = false
         }
-        
     }
 }
 

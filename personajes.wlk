@@ -58,7 +58,7 @@ class Personaje {
 	{
 		const posiblesObjetos = game.getObjectsIn(posicion)
 		return posiblesObjetos.all({ objeto => objeto.tipo() != "NoColisionable" }) && self.dentroDeLosLimites(posicion)
-	}
+  	}
 
 	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
 

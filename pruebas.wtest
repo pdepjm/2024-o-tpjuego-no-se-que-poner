@@ -4,139 +4,76 @@ import mapa.*
 import main.*
 
 
-
-describe "grupo pruebasmovimiento fireboy"{
-    test "fireboy se mueve a la izquierda"{
-        fireboy.position(game.at(3,0))
-        fireboy.movIzquierda()
-        assert.equals(game.at(2,0),fireboy.position())
-    }
-    test "fireboy se mueve a la derecha"{
-        fireboy.position(game.at(3,0))
-        fireboy.movDerecha()
-        assert.equals(game.at(4,0),fireboy.position())
-    }
-    test "fireboy salta"{
-        fireboy.position(game.at(3,0))
-        fireboy.movSaltar()
-        assert.equals(game.at(3,1),fireboy.position())
-    }
-    test "fireboy cae"{
-        fireboy.position(game.at(3,2))
-        fireboy.caer()
-        assert.equals(game.at(3,1),fireboy.position())
-    }
-}
-
-describe "grupo pruebas movimiento watergirl"{
-    test "watergirl se mueve a la izquierda"{
-        watergirl.position(game.at(3,0))
-        watergirl.movIzquierda()
-        assert.equals(game.at(2,0),watergirl.position())
-    }
-    test "watergirl se mueve a la derecha"{
-        watergirl.position(game.at(3,0))
-        watergirl.movDerecha()
-        assert.equals(game.at(4,0),watergirl.position())
-    }
-    test "watergirl salta"{
-        watergirl.position(game.at(3,0))
-        watergirl.movSaltar()
-        assert.equals(game.at(3,1),watergirl.position())
-    }
-    test "watergirl cae"{
-        watergirl.position(game.at(3,2))
-        watergirl.caer()
-        assert.equals(game.at(3,1),watergirl.position())
-    }
-}
-
-//no sabemos como hacer (o forzar la colision) entre dos objetos
-describe "grupo pruebas colisiones " {
-   
-  test " de watergirl con bloque tierra" {
-    watergirl.position(game.at(1,0))
-    watergirl.posicionAnt(game.at(1,0))
-    watergirl.movSaltar()
-    assert.equals(game.at(1,0),watergirl.position())
+describe "Interacciones generales de un personaje" {
+  
+  const personaje = new Personaje(position = game.at(0,0))
+  test "Moverse a la derecha" 
+  {
+    personaje.movDerecha()
+    assert.equals(1, personaje.position().x())
   }
-    test " de fireboy con bloque tierra" {
-    fireboy.position(game.at(1,0))
-    mapa.crearBloquesDeTierra()
-    fireboy.movSaltar()
-    assert.equals(game.at(1,0),fireboy.position())
-    }
 
-    test " de watergirl con bloque agua" {
-    watergirl.position(game.at(8,0))
-    watergirl.posicionAnt(game.at(8,0))
-    watergirl.movDerecha()
-    assert.equals(game.at(9,0),watergirl.position())
-    }
+  test "Moverse a la izquierda"
+  {
+    personaje.movIzquierda()
+    assert.equals(0, personaje.position().x())
+  }
 
-    test " de fireboy con bloque agua" {
-    fireboy.position(game.at(8,0))
-    fireboy.posicionAnt(game.at(8,0))
-    fireboy.movDerecha()
-    assert.equals(game.at(9,0),fireboy.position())
-    }
+  test "Moverse hacia arriba"
+  {
+    personaje.movSubir()
+    assert.equals(1, personaje.position().y())
+  }
 
-    test " de watergirl con bloque fuego" {
-    watergirl.position(game.at(4,0))
-    watergirl.posicionAnt(game.at(4,0))
-    watergirl.movDerecha()
-    assert.equals(game.at(1,2),watergirl.position())
-    }
+  test "Caer hacia abajo 1 solo espacio"
+  {
+    personaje.caer()
+    assert.equals(0, personaje.position().y())
+  }
 
-    test " de fireboy con bloque fuego" {
-    fireboy.position(game.at(4,0))
-    fireboy.posicionAnt(game.at(4,0))
-    fireboy.movDerecha()
-    assert.equals(game.at(1,0),fireboy.position())
-    }
+  test "Muere con un bloque de acido"
+  {
+    const bloqueAcido = new BloqueAcido()
+    bloqueAcido.tratarColision(personaje)
+    assert.that(personaje.estaMuerto())
+  }
 
-    test " de watergirl con bloque acido" {
-    watergirl.position(game.at(8,0))
-    watergirl.posicionAnt(game.at(8,0))
-    watergirl.movDerecha()
-    assert.equals(game.at(1,2),watergirl.position())
-    }
-
-    test " de fireboy con bloque acido" {
-    fireboy.position(game.at(8,0))
-    fireboy.posicionAnt(game.at(8,0))
-    fireboy.movDerecha()
-    assert.equals(game.at(1,0),fireboy.position())
-    }
+  test "Muere con un bloque de pinchos"
+  {
+    const bloquePinchos = new BloquePinchos()
+    bloquePinchos.tratarColision(personaje)
+    assert.that(personaje.estaMuerto())
+  }
 }
 
-describe "grupo pruebas elementos"{
-    test "prueba de boton"{
-        
-        assert.equals(false)
-    }
-    test "prueba de elevadorPorPalanca"{
-        
-        assert.equals(false)
-    }
-    test "prueba de elevadorPorBoton"{
-        
-        assert.equals(false)
-    }
-    test "prueba de palanca"{
-       
-        assert.equals(false)
-    }
-    test "prueba de puertaFuego"{
-        puertaFuego.position(game.at(12,14))
-        assert.equals(game.at(12,14),puertaFuego.position())
-    }
-    test "prueba de puertaAgua"{
-        puertaAgua.position(game.at(8,14))
-        assert.equals(game.at(8,14),puertaAgua.position())
-    }
-    test "prueba de cubo"{
-        
-        assert.equals(false)
-    }
+describe "Interacciones de fireboy" {
+
+  test "No muere con un bloque de fuego"
+  {
+    const bloqueFuego = new BloqueFuego()
+    bloqueFuego.tratarColision(fireboy)
+    assert.that(!fireboy.estaMuerto())
+  }
+  test "Muere con un bloque de agua" 
+  {
+    const bloqueAgua = new BloqueAgua()
+    bloqueAgua.tratarColision(fireboy)
+    assert.that(fireboy.estaMuerto())
+  }
+}
+
+describe "Interacciones de watergirl" {
+
+  test "No muere con un bloque de agua"
+  {
+    const bloqueAgua = new BloqueAgua()
+    bloqueAgua.tratarColision(watergirl )
+    assert.that(!watergirl.estaMuerto())
+  }
+  test "Muere con un bloque de fuego" 
+  {
+    const bloqueFuego = new BloqueFuego()
+    bloqueFuego.tratarColision(watergirl)
+    assert.that(watergirl.estaMuerto())
+  }
 }

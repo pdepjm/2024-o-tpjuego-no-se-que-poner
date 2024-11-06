@@ -1,8 +1,10 @@
 class Personaje {
 	var property position
+	const posicionInicial = position
 	var cantSaltos = 0
 	var property estaMuerto = false
 	var estaSaltando = false
+
 	method tratarColision(personaje) {}
 	method puedeSerAtravesado() = true
 	method puedePresionarBoton() = true
@@ -71,12 +73,22 @@ class Personaje {
 		estaMuerto = true
 	}
 
+	method reiniciar()
+	{
+		position = posicionInicial
+		if(estaMuerto) game.addVisual(self)
+		estaMuerto = false
+	}
+
 }
 
 object fireboy inherits Personaje (position = game.at(0, 0)) {
 	method image() = "fireboy6.png"
 	method tocarFuego(){}
 	method tocarAgua(){ self.morir()}
+	method puedeAbrirPuertaFuego() = true
+	method puedeAbrirPuertaAgua() = false
+
 
 	method presionar()
 	{
@@ -89,6 +101,8 @@ object watergirl inherits Personaje (position = game.at(0, 2)) {
 	method image() = "watergirl3.png"
 	method tocarFuego(){self.morir()}
 	method tocarAgua(){}
+	method puedeAbrirPuertaFuego() = false
+	method puedeAbrirPuertaAgua() = true
 
 	method moverElemento()
 	{

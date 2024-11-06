@@ -4,7 +4,6 @@ import personajes.*
 import elementos.*
 
 
-
 program FireboyAndWatergirl {
 
 	mapa.inciar()
@@ -21,9 +20,17 @@ program FireboyAndWatergirl {
 	keyboard.d().onPressDo({watergirl.movDerecha()})
 	keyboard.s().onPressDo({watergirl.moverElemento()})
 
+	keyboard.r().onPressDo({juego.reiniciar()})
+
 	game.whenCollideDo(fireboy, {elemento => elemento.tratarColision(fireboy)})
 	game.whenCollideDo(watergirl, {elemento => elemento.tratarColision(watergirl)})
 	game.onTick(1000, "Chequear boton", {botonAbajo.chequearBoton()})
+	game.onTick(1000, "Chequear puerta agua", {puertaAgua.chequearPuerta()})
+	game.onTick(1000, "Chequear puerta fuego", {puertaFuego.chequearPuerta()})
+	game.onTick(1000, "Chequear victoria", {if(juego.condicionesGanadoras()) juego.ganaste()})
+	game.onTick(1000, "Chequear derrota", {if(juego.condicionesPerdedoras()) juego.perdiste()})
+
+
 	
 	const soundtrack = game.sound("soundtrack.ogg")
   	soundtrack.shouldLoop(true)

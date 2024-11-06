@@ -1,4 +1,6 @@
 import elementos.*
+import personajes.fireboy
+import personajes.watergirl
 
 object mapa
 {
@@ -133,3 +135,47 @@ class BloquePinchos inherits Bloque
     }
 }
 
+object juego
+{
+    var cartelActual = cartelGanador
+    var unCartelActivo = false
+    const elementos = [elevadorPorBoton, elevadorPorPalanca, fireboy, watergirl, cubo]
+    method ganaste()
+    {
+        game.addVisual(cartelGanador)
+        cartelActual = cartelGanador
+        unCartelActivo = true
+    }
+
+    method perdiste()
+    {
+        game.addVisual(cartelPerdedor)
+        cartelActual = cartelPerdedor
+        unCartelActivo = true
+    }
+
+    method reiniciar()
+    {
+        if(unCartelActivo)
+        {
+            elementos.forEach({e => e.reiniciar()})
+            unCartelActivo = false
+            game.removeVisual(cartelActual)
+        }
+    }
+
+    method condicionesGanadoras() = puertaFuego.estaAbierta() && puertaAgua.estaAbierta() && !unCartelActivo
+    method condicionesPerdedoras() = fireboy.estaMuerto() && watergirl.estaMuerto() && !unCartelActivo
+}
+
+object cartelGanador
+{
+    method image() = "ganaste2.jpg"
+    var property position = game.at(3,4)
+}
+
+object cartelPerdedor
+{
+    method image() = "perdiste3.jpg"
+    var property position = game.at(3,4)
+}

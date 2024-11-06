@@ -33,6 +33,11 @@ class Elevador
 
         return posicionInicial
     }
+
+    method reiniciar()
+    {
+        activado = false
+    }
 }
 
 const elevadorPorBoton = new Elevador (posicionInicial = game.at(14, 9))
@@ -86,16 +91,39 @@ object cubo inherits Elemento (position = game.at(6, 10))
         position = game.at(position.x() + desplazamiento, position.y())
         game.sound("bloque.ogg").play() 
     }
+
+    method reiniciar()
+    {
+        position = game.at(6, 10)
+    }
 }
 
-object puertaFuego inherits Elemento (position = game.at(12, 14))
-{   
-    method image() = "puertaFuego.png"
-    override method tratarColision(personaje) {}
-}
-
-object puertaAgua inherits Elemento (position = game.at(8, 14))
+class Puerta inherits Elemento
 {
-    method image() = "puertaAgua.png"
-    override method tratarColision(personaje) {}
+    const condicion 
+    const imagenCerrada
+    var property estaAbierta = false
+    method puedeAbrirPuertaFuego() = false
+	method puedeAbrirPuertaAgua() = false
+    method image()
+    {
+        if(estaAbierta) return "puertaAbierta.png"
+        return imagenCerrada
+    }
+    
+    method hayAlguienEnPuerta()
+    {
+        const posibles = game.getObjectsIn(self.position())
+        return posibles.any(condicion)
+    }
+
+    method chequearPuerta()
+    {
+        if(self.hayAlguienEnPuerta()) estaAbierta = true
+        else estaAbierta = false
+    }
 }
+
+const puertaFuego = new Puerta(position = game.at(12, 14), imagenCerrada = "puertaFuego.png", condicion = {p => p.puedeAbrirPuertaFuego()})
+
+const puertaAgua = new Puerta (position = game.at(8, 14), imagenCerrada = "puertaAgua.png", condicion = {p => p.puedeAbrirPuertaAgua()})

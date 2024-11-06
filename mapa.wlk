@@ -6,8 +6,7 @@ object mapa
     //method que crea bloques de un tipo en una misma fila o valor de y de un punto x inicial a uno x final
 	{
 		(xi..xf).forEach({ x =>
-			const nuevoBloque = fabrica.crearBloque()
-			nuevoBloque.position(game.at(x, y))
+			const nuevoBloque = fabrica.crearBloque(game.at(x, y))
 		 	game.addVisual(nuevoBloque)
 		})
 	} 
@@ -59,39 +58,43 @@ object mapa
 
 }
 object fabricaBloqueTierra {
-    method crearBloque() = new BloqueTierra()
+    method crearBloque(posicion) = new BloqueTierra(position = posicion)
 }
 
 object fabricaBloqueAgua {
-    method crearBloque() = new BloqueAgua()
+    method crearBloque(posicion) = new BloqueAgua(position = posicion)
 }
 
 object fabricaBloqueFuego {
-    method crearBloque() = new BloqueFuego()
+    method crearBloque(posicion) = new BloqueFuego(position = posicion)
 }
 
 object fabricaBloqueAcido {
-    method crearBloque() = new BloqueAcido()
+    method crearBloque(posicion) = new BloqueAcido(position = posicion)
 }
 
 object fabricaBloquePinchos
 {
-    method crearBloque() = new BloquePinchos()
+    method crearBloque(posicion) = new BloquePinchos( position = posicion)
 }
 
-class BloqueTierra
+class Bloque
 {
-    var property position = game.at(0,0)
-	method image() = "bloqueTierra2.png"
+    const property position
+    method puedeSerPresionado() = false
+    method puedeSerAtravesado() = true
 
-    method tipo() = "NoColisionable" 
+}
+
+class BloqueTierra inherits Bloque
+{
+	method image() = "bloqueTierra2.png"
+    override method puedeSerAtravesado() = false
 } 
 
-class BloqueFuego
+class BloqueFuego inherits Bloque
 {
-    var property position = game.at(0,0)
 	method image() = "bloqueDeFuego.png"
-    method tipo() = "BloqueFuego" 
 
     method tratarColision(personaje) 
     {
@@ -99,24 +102,19 @@ class BloqueFuego
     }
 }
 
-class BloqueAgua
+class BloqueAgua inherits Bloque
 {
-    var property position = game.at(0,0)
 	method image() = "bloqueDeAgua.png"
-    method tipo() = "BloqueAgua" 
 
     method tratarColision(personaje) 
     {
         personaje.tocarAgua()
     }
-   
 }
 
-class BloqueAcido
+class BloqueAcido inherits Bloque
 {
-    var property position = game.at(0,0)
 	method image() = "acido46.png"
-    method tipo() = "BloqueAcido" 
 
     method tratarColision(personaje) 
     {
@@ -124,16 +122,13 @@ class BloqueAcido
     }
 }
 
-class BloquePinchos
+class BloquePinchos inherits Bloque
 {
-    var property position = game.at(0,0)
     method image() = "bloquePinchos.png"
-    method tipo() = "BloquePinchos"
 
     method tratarColision(personaje)
     {
         personaje.morir()
     }
-
 }
 

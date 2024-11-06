@@ -3,9 +3,10 @@ class Personaje {
 	var cantSaltos = 0
 	var property estaMuerto = false
 	var estaSaltando = false
-	method tipo() = "Personaje"
 	method tratarColision(personaje) {}
-	
+	method puedeSerAtravesado() = true
+	method puedePresionarBoton() = true
+
 	method moverse(nuevaPosicion) 
 	{
 		if (self.puedeMoverse(nuevaPosicion)) position = nuevaPosicion
@@ -57,32 +58,37 @@ class Personaje {
 	method puedeMoverse(posicion) 
 	{
 		const posiblesObjetos = game.getObjectsIn(posicion)
-		return posiblesObjetos.all({ objeto => objeto.tipo() != "NoColisionable" }) && self.dentroDeLosLimites(posicion)
+		return posiblesObjetos.all({ objeto => objeto.puedeSerAtravesado() }) && self.dentroDeLosLimites(posicion)
   	}
 
 	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
-
-	method presionar()
-	{
-		const presionable = game.getObjectsIn(self.position()).head()
-		if(presionable.tipo() == "Presionable") presionable.activar()  
-	}
 
 	method morir(){
 		if(!estaMuerto) game.sound("morir.ogg").play()	
 	  	game.removeVisual(self)
 		estaMuerto = true
 	}
+
 }
 
 object fireboy inherits Personaje (position = game.at(0, 0)) {
 	method image() = "fireboy6.png"
 	method tocarFuego(){}
 	method tocarAgua(){ self.morir()}
+
+	method presionar()
+	{
+		const presionable = game.getObjectsIn(self.position()).head()
+		if(presionable.puedeSerPresionado()) presionable.activar()  
+	}
 }
 
 object watergirl inherits Personaje (position = game.at(0, 2)) {
 	method image() = "watergirl3.png"
 	method tocarFuego(){self.morir()}
 	method tocarAgua(){}
+
+	method moverElemento()
+	{
+	}
 }

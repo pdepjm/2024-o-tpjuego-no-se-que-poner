@@ -3,58 +3,39 @@ import personajes.*
 class Elemento 
 {
     var property position
-    method tipo() = "Elemento"
+    method puedeSerAtravesado() = true
+    method puedeSerPresionado() = false
+    method puedePresionarBoton() = false
 }
-
-class Elevador inherits Elemento
+class Elevador 
 {
-    var activado = false
+    const posicionInicial
+    var property activado = false
     method image() = "elevador2.png"
-    override method tipo() = "NoColisionable"
+    method puedeSerAtravesado() = false
 
-    method activarse()
+    method cambiarEstado(nuevoEstado) 
     {
-        if(activado) self.subir() else self.bajar()
-        game.sound("elevador.ogg").play()
-    }
-
-    method bajar()
-    {
-        position = position.down(1)
-        activado = true
-    }
-
-    method subir()
-    {
-        position = position.up(1)
-        activado = false
-    }
-}
-
-object elevadorPorBoton inherits Elevador (position = game.at(14, 9))
-{
-    override method bajar()
-    {
-        if(!activado)
+        if(nuevoEstado != activado)
         {
-            position = game.at(14,8)
+            activado = nuevoEstado
             game.sound("elevador.ogg").play()
-            activado = true
         }
     }
 
-    override method subir()
+    method position()
     {
-        if(activado)
-        {
-            position = game.at(14,9)
-            game.sound("elevador.ogg").play()
-            activado = false
+        if(activado){
+            return posicionInicial.down(1)
         }
+
+        return posicionInicial
     }
 }
 
-const elevadorPorPalanca = new Elevador (position = game.at(0, 6))
+const elevadorPorBoton = new Elevador (posicionInicial = game.at(14, 9))
+
+const elevadorPorPalanca = new Elevador (posicionInicial = game.at(0, 6))
 
 class Boton inherits Elemento 
 {
@@ -64,7 +45,7 @@ class Boton inherits Elemento
     method estaPresionado()
     {
         const posibles = game.getObjectsIn(self.position())
-        return posibles.any({objeto => objeto.tipo() == "Personaje"})
+        return posibles.any({objeto => objeto.puedePresionarBoton()})
     }
 }
 
@@ -72,8 +53,8 @@ object botonAbajo inherits Boton (position = game.at(5, 7))
 {
     method chequearBoton()
     {
-        if(self.estaPresionado() || botonArriba.estaPresionado()) elevadorPorBoton.bajar()
-        else elevadorPorBoton.subir()
+        if(self.estaPresionado() || botonArriba.estaPresionado()) elevadorPorBoton.cambiarEstado(true)
+        else elevadorPorBoton.cambiarEstado(false)
     }
 }
 object botonArriba inherits Boton (position = game.at(10, 10))
@@ -82,13 +63,13 @@ object botonArriba inherits Boton (position = game.at(10, 10))
 
 object palanca inherits Elemento (position = game.at(3, 4))
 {
-    override method tipo() = "Presionable"
     method image() = "palanca.png"
-    
+    override method puedeSerPresionado() = true
     method tratarColision(personaje){}
 
     method activar() {
-       elevadorPorPalanca.activarse()
+       if(elevadorPorPalanca.activado()) elevadorPorPalanca.cambiarEstado(false) 
+       else elevadorPorPalanca.cambiarEstado(true)
        game.sound("activar.ogg").play()
     }
 }
@@ -96,7 +77,8 @@ object palanca inherits Elemento (position = game.at(3, 4))
 object cubo inherits Elemento (position = game.at(6, 10))
 {
     method image() = "cubo.png"
-    override method tipo() = "NoColisionable"
+    override method puedeSerAtravesado() = false
+    override method puedePresionarBoton() = true
 }
 
 object puertaFuego inherits Elemento (position = game.at(12, 14))

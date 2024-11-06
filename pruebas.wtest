@@ -3,10 +3,13 @@ import personajes.*
 import mapa.*
 import main.*
 
+const posicion = game.at(0,0)
+const bloqueAcido = new BloqueAcido(position = posicion)
+const bloquePinchos = new BloquePinchos(position = posicion)
 
 describe "Interacciones generales de un personaje" {
   
-  const personaje = new Personaje(position = game.at(0,0))
+  const personaje = new Personaje(position = posicion)
   test "Moverse a la derecha" 
   {
     personaje.movDerecha()
@@ -33,30 +36,29 @@ describe "Interacciones generales de un personaje" {
 
   test "Muere con un bloque de acido"
   {
-    const bloqueAcido = new BloqueAcido()
     bloqueAcido.tratarColision(personaje)
     assert.that(personaje.estaMuerto())
   }
 
   test "Muere con un bloque de pinchos"
   {
-    const bloquePinchos = new BloquePinchos()
     bloquePinchos.tratarColision(personaje)
     assert.that(personaje.estaMuerto())
   }
 }
 
+const bloqueFuego = new BloqueFuego(position = posicion)
+const bloqueAgua = new BloqueAgua(position = posicion)
+
 describe "Interacciones de fireboy" {
 
   test "No muere con un bloque de fuego"
   {
-    const bloqueFuego = new BloqueFuego()
     bloqueFuego.tratarColision(fireboy)
     assert.that(!fireboy.estaMuerto())
   }
   test "Muere con un bloque de agua" 
   {
-    const bloqueAgua = new BloqueAgua()
     bloqueAgua.tratarColision(fireboy)
     assert.that(fireboy.estaMuerto())
   }
@@ -66,13 +68,11 @@ describe "Interacciones de watergirl" {
 
   test "No muere con un bloque de agua"
   {
-    const bloqueAgua = new BloqueAgua()
     bloqueAgua.tratarColision(watergirl )
     assert.that(!watergirl.estaMuerto())
   }
   test "Muere con un bloque de fuego" 
   {
-    const bloqueFuego = new BloqueFuego()
     bloqueFuego.tratarColision(watergirl)
     assert.that(watergirl.estaMuerto())
   }

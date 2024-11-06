@@ -83,6 +83,7 @@ class Bloque
     const property position
     method puedeSerPresionado() = false
     method puedeSerAtravesado() = true
+    method puedeSerMovido() = false
 
 }
 

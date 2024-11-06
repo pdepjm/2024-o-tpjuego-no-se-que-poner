@@ -6,6 +6,8 @@ class Personaje {
 	method tratarColision(personaje) {}
 	method puedeSerAtravesado() = true
 	method puedePresionarBoton() = true
+	method puedeSerMovido() = false
+	method puedeSerPresionado() = false
 
 	method moverse(nuevaPosicion) 
 	{
@@ -78,8 +80,8 @@ object fireboy inherits Personaje (position = game.at(0, 0)) {
 
 	method presionar()
 	{
-		const presionable = game.getObjectsIn(self.position()).head()
-		if(presionable.puedeSerPresionado()) presionable.activar()  
+		const elemento = game.getObjectsIn(self.position()).head()
+		if(elemento.puedeSerPresionado()) elemento.activar()  
 	}
 }
 
@@ -90,5 +92,15 @@ object watergirl inherits Personaje (position = game.at(0, 2)) {
 
 	method moverElemento()
 	{
+		const elementosIzquierda = game.getObjectsIn(self.position().left(1))
+		const elementosDerecha = game.getObjectsIn(self.position().right(1))
+		if(elementosIzquierda.size() > 0)
+		{
+			elementosIzquierda.forEach({elemento => if(elemento.puedeSerMovido()) elemento.moverse(-1)})
+		}
+		else if(elementosDerecha.size() > 0)
+		{
+			elementosDerecha.forEach({elemento => if(elemento.puedeSerMovido()) elemento.moverse(1)})
+		}
 	}
 }

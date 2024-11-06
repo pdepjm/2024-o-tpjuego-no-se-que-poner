@@ -6,6 +6,8 @@ class Elemento
     method puedeSerAtravesado() = true
     method puedeSerPresionado() = false
     method puedePresionarBoton() = false
+    method puedeSerMovido() = false
+    method tratarColision(personaje) {}
 }
 class Elevador 
 {
@@ -40,7 +42,6 @@ const elevadorPorPalanca = new Elevador (posicionInicial = game.at(0, 6))
 class Boton inherits Elemento 
 {
     method image() = "boton2.png"
-    method tratarColision(personaje) {}
 
     method estaPresionado()
     {
@@ -65,7 +66,6 @@ object palanca inherits Elemento (position = game.at(3, 4))
 {
     method image() = "palanca.png"
     override method puedeSerPresionado() = true
-    method tratarColision(personaje){}
 
     method activar() {
        if(elevadorPorPalanca.activado()) elevadorPorPalanca.cambiarEstado(false) 
@@ -79,16 +79,23 @@ object cubo inherits Elemento (position = game.at(6, 10))
     method image() = "cubo.png"
     override method puedeSerAtravesado() = false
     override method puedePresionarBoton() = true
+    override method puedeSerMovido() = true
+
+    method moverse(desplazamiento)
+    {
+        position = game.at(position.x() + desplazamiento, position.y())
+        game.sound("bloque.ogg").play() 
+    }
 }
 
 object puertaFuego inherits Elemento (position = game.at(12, 14))
 {   
     method image() = "puertaFuego.png"
-    method tratarColision(personaje) {}
+    override method tratarColision(personaje) {}
 }
 
 object puertaAgua inherits Elemento (position = game.at(8, 14))
 {
     method image() = "puertaAgua.png"
-    method tratarColision(personaje) {}
+    override method tratarColision(personaje) {}
 }

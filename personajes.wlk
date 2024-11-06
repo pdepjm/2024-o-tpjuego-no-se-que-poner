@@ -65,7 +65,7 @@ class Personaje {
 		return posiblesObjetos.all({ objeto => objeto.puedeSerAtravesado() }) && self.dentroDeLosLimites(posicion)
   	}
 
-	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 15)
+	method dentroDeLosLimites(posicion) = posicion.x().between(0, 14) && posicion.y().between(0, 19)
 
 	method morir(){
 		if(!estaMuerto) game.sound("morir.ogg").play()	

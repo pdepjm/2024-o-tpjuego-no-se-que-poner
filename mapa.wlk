@@ -15,11 +15,12 @@ object mapa
 
     method agregarElementos() 
     {
-        game.addVisual(botonAbajo)
-        game.addVisual(botonArriba)
-        game.addVisual(palanca)
-        game.addVisual(elevadorPorBoton)
-        game.addVisual(elevadorPorPalanca)
+        primerElevadorPorBoton.agregarseAlMapa()
+        segundoElevadorPorBoton.agregarseAlMapa()
+        primerElevadorPorPalanca.agregarseAlMapa()
+        segundoElevadorPorPalanca.agregarseAlMapa()
+        terceroElevadorPorPalanca.agregarseAlMapa()
+        cuartoElevadorPorPalanca.agregarseAlMapa()
         game.addVisual(puertaAgua)
         game.addVisual(puertaFuego)
         game.addVisual(cubo)
@@ -35,6 +36,10 @@ object mapa
 		self.crearBloques(9, 0, 12,  fabricaBloqueTierra)
 		self.crearBloques(12, 0, 1, fabricaBloqueTierra)
 		self.crearBloques(13, 3, 14, fabricaBloqueTierra)
+        self.crearBloques(15, 3, 7, fabricaBloqueTierra)
+        self.crearBloques(15, 9, 12, fabricaBloqueTierra)
+        self.crearBloques(14, 14, 14, fabricaBloqueTierra)
+		self.crearBloques(18, 0, 4, fabricaBloqueTierra)
     }
 
     method crearBloquesEspeciales() 
@@ -43,13 +48,13 @@ object mapa
 		self.crearBloques(0, 9, 10, fabricaBloqueAgua)
 		self.crearBloques(3, 8, 9, fabricaBloqueAcido)
         self.crearBloques(5, 7, 10, fabricaBloquePinchos)
-
+        self.crearBloques(15, 0, 2, fabricaBloquePinchos)
     }
 
 	method inciar() 
 	{
         game.title("Fireboy and Watergirl")
-	    game.height(16)
+	    game.height(20)
 	    game.width(15)
 	    game.cellSize(50)
 	    game.boardGround("bg.png")
@@ -139,11 +144,14 @@ object juego
 {
     var cartelActual = cartelGanador
     var unCartelActivo = false
-    const elementos = [elevadorPorBoton, elevadorPorPalanca, fireboy, watergirl, cubo]
+    const elementos = [primerElevadorPorBoton, segundoElevadorPorBoton, primerElevadorPorPalanca,segundoElevadorPorPalanca,
+                        terceroElevadorPorPalanca,cuartoElevadorPorPalanca, fireboy, watergirl, cubo]
     method ganaste()
     {
         game.addVisual(cartelGanador)
         cartelActual = cartelGanador
+        soundtrack.pause()
+        game.sound("ganar.ogg").play()
         unCartelActivo = true
     }
 
@@ -151,6 +159,8 @@ object juego
     {
         game.addVisual(cartelPerdedor)
         cartelActual = cartelPerdedor
+        soundtrack.pause()
+        game.sound("gameover.ogg").play()
         unCartelActivo = true
     }
 
@@ -161,6 +171,7 @@ object juego
             elementos.forEach({e => e.reiniciar()})
             unCartelActivo = false
             game.removeVisual(cartelActual)
+            soundtrack.resume()
         }
     }
 
@@ -171,11 +182,14 @@ object juego
 object cartelGanador
 {
     method image() = "ganaste2.jpg"
-    var property position = game.at(3,4)
+    var property position = game.at(3,7)
 }
 
 object cartelPerdedor
 {
     method image() = "perdiste3.jpg"
-    var property position = game.at(3,4)
+    var property position = game.at(3,7)
 }
+
+const soundtrack = game.sound("soundtrack.ogg")
+

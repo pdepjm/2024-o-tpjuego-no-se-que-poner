@@ -12,6 +12,7 @@ class Elemento
 class Elevador 
 {
     const posicionInicial
+    const offset
     var property activado = false
     method image() = "elevador2.png"
     method puedeSerAtravesado() = false
@@ -28,7 +29,7 @@ class Elevador
     method position()
     {
         if(activado){
-            return posicionInicial.down(1)
+            return posicionInicial.down(offset)
         }
 
         return posicionInicial
@@ -40,10 +41,41 @@ class Elevador
     }
 }
 
-const elevadorPorBoton = new Elevador (posicionInicial = game.at(14, 9))
+class ElevadorPorBoton inherits Elevador
+{
+    const botonAsociado1
+    const botonAsociado2
 
-const elevadorPorPalanca = new Elevador (posicionInicial = game.at(0, 6))
+    method chequearSusBotones()
+    {
+        if(botonAsociado1.estaPresionado() || botonAsociado2.estaPresionado()) self.cambiarEstado(true)
+        else self.cambiarEstado(false)
+    }
 
+    method agregarseAlMapa()
+    {
+        game.addVisual(self)
+        game.addVisual(botonAsociado1)
+        game.addVisual(botonAsociado2)
+    }
+}
+
+class ElevadorPorPalanca inherits Elevador
+{
+    const palancaAsociada
+
+    method chequearSuPalanca()
+    {
+        if(palancaAsociada.estaActiva()) self.cambiarEstado(true)
+        else self.cambiarEstado(false)
+    }
+
+    method agregarseAlMapa()
+    {
+        game.addVisual(self)
+        if(!game.hasVisual(palancaAsociada))game.addVisual(palancaAsociada)
+    }
+}
 class Boton inherits Elemento 
 {
     method image() = "boton2.png"
@@ -54,31 +86,42 @@ class Boton inherits Elemento
         return posibles.any({objeto => objeto.puedePresionarBoton()})
     }
 }
-
-object botonAbajo inherits Boton (position = game.at(5, 7))
+class Palanca inherits Elemento
 {
-    method chequearBoton()
-    {
-        if(self.estaPresionado() || botonArriba.estaPresionado()) elevadorPorBoton.cambiarEstado(true)
-        else elevadorPorBoton.cambiarEstado(false)
-    }
-}
-object botonArriba inherits Boton (position = game.at(10, 10))
-{
-}
-
-object palanca inherits Elemento (position = game.at(3, 4))
-{
+    var property estaActiva = false
     method image() = "palanca.png"
+
     override method puedeSerPresionado() = true
 
     method activar() {
-       if(elevadorPorPalanca.activado()) elevadorPorPalanca.cambiarEstado(false) 
-       else elevadorPorPalanca.cambiarEstado(true)
+       estaActiva = !estaActiva
        game.sound("activar.ogg").play()
     }
 }
 
+const primerElevadorPorBoton = new ElevadorPorBoton (posicionInicial = game.at(14, 9), 
+                                                    botonAsociado1 = new Boton (position = game.at(5, 7)), 
+                                                    botonAsociado2 = new Boton (position = game.at(10, 10)),
+                                                    offset = 1)
+const segundoElevadorPorBoton = new ElevadorPorBoton(posicionInicial = game.at(8,14),
+                                                    botonAsociado1 = new Boton (position = game.at(4, 14)), 
+                                                    botonAsociado2 = new Boton (position = game.at(12, 14)),
+                                                    offset = -1)
+
+const primerElevadorPorPalanca = new ElevadorPorPalanca (posicionInicial = game.at(0, 6), 
+                                                    palancaAsociada = new Palanca (position = game.at(3, 4)),
+                                                    offset = 1)
+const palancaMultiple = new Palanca(position = game.at(6,16))
+
+const segundoElevadorPorPalanca = new ElevadorPorPalanca (posicionInicial = game.at(9, 17), 
+                                                    palancaAsociada = palancaMultiple,
+                                                    offset = 1)
+const terceroElevadorPorPalanca = new ElevadorPorPalanca (posicionInicial = game.at(7, 18), 
+                                                    palancaAsociada = palancaMultiple,
+                                                    offset = 1)
+const cuartoElevadorPorPalanca = new ElevadorPorPalanca (posicionInicial = game.at(5, 19), 
+                                                    palancaAsociada = palancaMultiple,
+                                                    offset = 1)                                                   
 object cubo inherits Elemento (position = game.at(6, 10))
 {
     method image() = "cubo.png"
@@ -119,11 +162,14 @@ class Puerta inherits Elemento
 
     method chequearPuerta()
     {
-        if(self.hayAlguienEnPuerta()) estaAbierta = true
-        else estaAbierta = false
+        if(self.hayAlguienEnPuerta() != estaAbierta)
+        {
+            estaAbierta = self.hayAlguienEnPuerta()
+            game.sound("puerta.ogg").play()
+        }
     }
 }
 
-const puertaFuego = new Puerta(position = game.at(12, 14), imagenCerrada = "puertaFuego.png", condicion = {p => p.puedeAbrirPuertaFuego()})
+const puertaFuego = new Puerta(position = game.at(3, 19), imagenCerrada = "puertaFuego.png", condicion = {p => p.puedeAbrirPuertaFuego()})
 
-const puertaAgua = new Puerta (position = game.at(8, 14), imagenCerrada = "puertaAgua.png", condicion = {p => p.puedeAbrirPuertaAgua()})
+const puertaAgua = new Puerta (position = game.at(1, 19), imagenCerrada = "puertaAgua.png", condicion = {p => p.puedeAbrirPuertaAgua()})

@@ -24,15 +24,15 @@ program FireboyAndWatergirl {
 
 	game.whenCollideDo(fireboy, {elemento => elemento.tratarColision(fireboy)})
 	game.whenCollideDo(watergirl, {elemento => elemento.tratarColision(watergirl)})
-	game.onTick(1000, "Chequear boton", {botonAbajo.chequearBoton()})
-	game.onTick(1000, "Chequear puerta agua", {puertaAgua.chequearPuerta()})
-	game.onTick(1000, "Chequear puerta fuego", {puertaFuego.chequearPuerta()})
+	game.onTick(200, "Chequear elevadores por boton", {primerElevadorPorBoton.chequearSusBotones() segundoElevadorPorBoton.chequearSusBotones()})
+	game.onTick(1000, "Chequear elevadores por palanca", {primerElevadorPorPalanca.chequearSuPalanca()
+															segundoElevadorPorPalanca.chequearSuPalanca()
+															terceroElevadorPorPalanca.chequearSuPalanca()
+															cuartoElevadorPorPalanca.chequearSuPalanca()})
+	game.onTick(1000, "Chequear puertas", {puertaAgua.chequearPuerta() puertaFuego.chequearPuerta()})
 	game.onTick(1000, "Chequear victoria", {if(juego.condicionesGanadoras()) juego.ganaste()})
 	game.onTick(1000, "Chequear derrota", {if(juego.condicionesPerdedoras()) juego.perdiste()})
-
-
 	
-	const soundtrack = game.sound("soundtrack.ogg")
   	soundtrack.shouldLoop(true)
   	game.schedule(500, { soundtrack.play()} )
 

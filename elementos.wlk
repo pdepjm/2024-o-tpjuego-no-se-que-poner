@@ -75,6 +75,12 @@ class ElevadorPorPalanca inherits Elevador
         game.addVisual(self)
         if(!game.hasVisual(palancaAsociada))game.addVisual(palancaAsociada)
     }
+
+    override method reiniciar()
+    {
+        super()
+        palancaAsociada.reiniciar()
+    }
 }
 class Boton inherits Elemento 
 {
@@ -96,6 +102,11 @@ class Palanca inherits Elemento
     method activar() {
        estaActiva = !estaActiva
        game.sound("activar.ogg").play()
+    }
+
+    method reiniciar() 
+    {
+        estaActiva = false
     }
 }
 

@@ -91,7 +91,6 @@ class Bloque
     method puedeSerPresionado() = false
     method puedeSerAtravesado() = true
     method puedeSerMovido() = false
-
 }
 
 class BloqueTierra inherits Bloque

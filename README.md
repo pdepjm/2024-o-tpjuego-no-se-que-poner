@@ -1,4 +1,4 @@
-# El Pibe Fuego y La Guriza Agua
+# El Pibe Fuego y La Minita Agua
 
 UTN - Facultad Regional Buenos Aires - Materia Paradigmas de Programación
 
@@ -9,11 +9,6 @@ UTN - Facultad Regional Buenos Aires - Materia Paradigmas de Programación
 - Alvaro Federico Gianola (AlvaroGianola)
 - Natali Martirosyan (NatyMartirosyan)
 - Valentin Sosa (Valentin-Sosa)
-
- 
-
-## Capturas 
-
 
 
 ## Reglas de Juego / Instrucciones
@@ -36,8 +31,6 @@ fuego, ácido, interactuando con los diversos elementos y haciendo los saltos co
 
 ## Explicaciones Teóricas:
 Aplicamos los conceptos de polimorfismo a la forma en la que colisiona cada personaje con cada bloque/charco y con cada puerta.
-
-
 Aplicamos también conceptos de clases y herencia para la creación del mapa (ya que este constaba de muchos bloques iguales de las distintas clases), ambos personajes(compartian metodos), 
 los elementos con los que se puede interactuar, etc. 
 POR EJEMPLO: en la creacion del mapa existian muchos bloques iguales de las diversas clases, que a su vez todos los bloques de tierra, por ejemplo, deben colisionar de la misma forma con los personajes.

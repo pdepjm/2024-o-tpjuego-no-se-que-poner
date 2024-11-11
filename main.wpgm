@@ -1,16 +1,41 @@
 import wollok.game.*
+import mapa.*
+import personajes.*
+import elementos.*
 
-import pepita.*
 
-program PepitaGame {
-	game.title("Pepita")
-	game.height(10)
-	game.width(10)
-	game.cellSize(100)
+program FireboyAndWatergirl {
 
-	game.addVisual(pepita)
+	mapa.inciar()
+	game.addVisual(fireboy)
+	game.addVisual(watergirl)
 
-	keyboard.w().onPressDo({ pepita.fly(1) })
+	keyboard.left().onPressDo({fireboy.movIzquierda()})
+	keyboard.right().onPressDo({fireboy.movDerecha()})
+	keyboard.up().onPressDo({fireboy.movSaltar()})
+	keyboard.down().onPressDo({fireboy.presionar()})
+
+	keyboard.w().onPressDo({watergirl.movSaltar()})
+	keyboard.a().onPressDo({watergirl.movIzquierda()})
+	keyboard.d().onPressDo({watergirl.movDerecha()})
+	keyboard.s().onPressDo({watergirl.moverElemento()})
+
+	keyboard.r().onPressDo({juego.reiniciar()})
+
+	game.whenCollideDo(fireboy, {elemento => elemento.tratarColision(fireboy)})
+	game.whenCollideDo(watergirl, {elemento => elemento.tratarColision(watergirl)})
+	game.onTick(200, "Chequear elevadores por boton", {primerElevadorPorBoton.chequearSusBotones() segundoElevadorPorBoton.chequearSusBotones()})
+	game.onTick(1000, "Chequear elevadores por palanca", {primerElevadorPorPalanca.chequearSuPalanca()
+															segundoElevadorPorPalanca.chequearSuPalanca()
+															terceroElevadorPorPalanca.chequearSuPalanca()
+															cuartoElevadorPorPalanca.chequearSuPalanca()})
+	game.onTick(1000, "Chequear puertas", {puertaAgua.chequearPuerta() puertaFuego.chequearPuerta()})
+	//game.onTick(1000, "Chequear victoria", {if(juego.condicionesGanadoras()) juego.ganaste()})
+	//game.onTick(1000, "Chequear derrota", {if(juego.condicionesPerdedoras()) juego.perdiste()})
+	
+  	soundtrack.shouldLoop(true)
+  	game.schedule(500, { soundtrack.play()} )
 
 	game.start()
+
 }

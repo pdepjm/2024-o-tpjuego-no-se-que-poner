@@ -1,9 +1,194 @@
-import pepita.*
+import elementos.*
+import personajes.*
+import mapa.*
+import main.*
 
-describe "group of tests for pepita" {
+const posicion = game.at(0,0)
+const bloqueAcido = new BloqueAcido(position = posicion)
+const bloquePinchos = new BloquePinchos(position = posicion)
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+describe "Interacciones generales de un personaje" {
+  
+  const personaje = new Personaje(position = posicion, tipo = fuego)
+  test "Moverse a la derecha" 
+  {
+    personaje.movDerecha()
+    assert.equals(1, personaje.position().x())
+  }
+
+  test "Moverse a la izquierda"
+  {
+    personaje.movIzquierda()
+    assert.equals(0, personaje.position().x())
+  }
+
+  test "Moverse hacia arriba"
+  {
+    personaje.movSubir()
+    assert.equals(1, personaje.position().y())
+  }
+
+  test "Caer hacia abajo 1 solo espacio"
+  {
+    personaje.caer()
+    assert.equals(0, personaje.position().y())
+  }
+
+  test "Muere con un bloque de acido"
+  {
+    bloqueAcido.tratarColision(personaje)
+    assert.that(personaje.estaMuerto())
+  }
+
+  test "Muere con un bloque de pinchos"
+  {
+    bloquePinchos.tratarColision(personaje)
+    assert.that(personaje.estaMuerto())
+  }
+
+  test "Intentar moverse fuera de los limites"
+  {
+    personaje.movIzquierda()
+    assert.equals(0, personaje.position().x())
+  }
+
+  test "Intentar atravesar un bloque de tierra"
+  {
+    const bloqueTierra = new BloqueTierra(position = game.at(1,0))
+    game.addVisual(personaje)
+    game.addVisual(bloqueTierra)
+    personaje.movDerecha()
+    assert.equals(0, personaje.position().x())
+  }
+}
+
+const bloqueFuego = new BloqueFuego(position = posicion)
+const bloqueAgua = new BloqueAgua(position = posicion)
+const palanca = new Palanca(position=posicion)
+describe "Interacciones de fireboy" {
+
+  test "No muere con un bloque de fuego"
+  {
+    bloqueFuego.tratarColision(fireboy)
+    assert.that(!fireboy.estaMuerto())
+  }
+  test "Muere con un bloque de agua" 
+  {
+    bloqueAgua.tratarColision(fireboy)
+    assert.that(fireboy.estaMuerto())
+  }
+
+  test "Puede presionar una palanca"
+  {
+    game.addVisual(palanca)
+    game.addVisual(fireboy)
+    fireboy.presionar()
+    assert.that(palanca.estaActiva())
+  }
+
+  test "Puede abrir la puerta de fuego"
+  {
+    fireboy.position(game.at(3, 19))
+    game.addVisual(puertaFuego)
+    game.addVisual(fireboy)
+    puertaFuego.chequearPuerta()
+    assert.that(puertaFuego.estaAbierta())
+  }
+
+  test "No puede abrir la puerta de agua"
+  {
+    fireboy.position(game.at(1, 19))
+    game.addVisual(puertaAgua)
+    game.addVisual(fireboy)
+    puertaAgua.chequearPuerta()
+    assert.that(!puertaAgua.estaAbierta())
+  }
+}
+
+describe "Interacciones de watergirl" {
+
+  test "No muere con un bloque de agua"
+  {
+    bloqueAgua.tratarColision(watergirl )
+    assert.that(!watergirl.estaMuerto())
+  }
+  test "Muere con un bloque de fuego" 
+  {
+    bloqueFuego.tratarColision(watergirl)
+    assert.that(watergirl.estaMuerto())
+  }
+
+  test "Puede mover un cubo"
+  {
+    watergirl.position(game.at(7,10))
+    game.addVisual(watergirl)
+    game.addVisual(cubo)
+    watergirl.moverElemento()
+    assert.equals(5, cubo.position().x())
+  }
+
+  test "No puede abrir la puerta de fuego"
+  {
+    watergirl.position(game.at(3, 19))
+    game.addVisual(puertaFuego)
+    game.addVisual(watergirl)
+    puertaFuego.chequearPuerta()
+    assert.that(!puertaFuego.estaAbierta())
+  }
+
+  test "Puede abrir la puerta de agua"
+  {
+    watergirl.position(game.at(1, 19))
+    game.addVisual(puertaAgua)
+    game.addVisual(watergirl)
+    puertaAgua.chequearPuerta()
+    assert.that(puertaAgua.estaAbierta())
+  }
+}
+
+const palancaAsociada = new Palanca(position = posicion)
+const elevadorPorPalanca = new ElevadorPorPalanca(posicionInicial= game.at(1,1), palancaAsociada = palancaAsociada, offset = 1)
+const elevadorPorBoton = new ElevadorPorBoton(posicionInicial = game.at(1, 1), 
+                                                    botonAsociado1 = new Boton (position = game.at(0, 0)), 
+                                                    botonAsociado2 = new Boton (position = game.at(2, 0)),
+                                                    offset = 1)
+const botonNoAsociado = new Boton(position = game.at(4,0))
+describe "Tests de elevadores" {
+  test "Presionando la palanca asociada el elevador por palanca baja" 
+  {
+    game.addVisual(palancaAsociada)
+    game.addVisual(fireboy)
+    game.addVisual(elevadorPorPalanca)
+    fireboy.presionar()
+    elevadorPorPalanca.chequearSuPalanca()
+    assert.equals(0, elevadorPorPalanca.position().y())    
+  }
+  test "Presionando una palanca no asociada el elevador por palanca no baja" 
+  {
+    game.addVisual(palanca)
+    game.addVisual(fireboy)
+    game.addVisual(elevadorPorPalanca)
+    fireboy.presionar()
+    elevadorPorPalanca.chequearSuPalanca()
+    assert.equals(1, elevadorPorPalanca.position().y())  
+  }
+
+  test "Presionando un boton asociado el elevador por boton baja"
+  {
+    elevadorPorBoton.agregarseAlMapa()
+    game.addVisual(fireboy)
+    elevadorPorBoton.chequearSusBotones()
+    assert.equals(0, elevadorPorBoton.position().y())    
+  }
+
+  test "Presionando un boton no asociado el elevador por boton no baja"
+  {
+    fireboy.position(game.at(4,0))
+    elevadorPorBoton.agregarseAlMapa()
+    game.addVisual(fireboy)
+    game.addVisual(botonNoAsociado)
+    elevadorPorBoton.chequearSusBotones()
+    assert.equals(1, elevadorPorBoton.position().y())    
   }
 
 }

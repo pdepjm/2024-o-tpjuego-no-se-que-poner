@@ -1,4 +1,6 @@
+import mapa.*
 class Personaje {
+	const property tipo
 	var property position
 	const posicionInicial = position
 	var cantSaltos = 0
@@ -71,6 +73,7 @@ class Personaje {
 		if(!estaMuerto) game.sound("morir.ogg").play()	
 	  	game.removeVisual(self)
 		estaMuerto = true
+		if (juego.condicionesPerdedoras()) juego.perdiste()
 	}
 
 	method reiniciar()
@@ -81,13 +84,14 @@ class Personaje {
 	}
 
 }
-
-object fireboy inherits Personaje (position = game.at(0, 0)) {
+object fuego {}
+object agua {}
+object fireboy inherits Personaje (position = game.at(0, 0), tipo = fuego) {
 	method image() = "fireboy6.png"
 	method tocarFuego(){}
 	method tocarAgua(){ self.morir()}
-	method puedeAbrirPuertaFuego() = true
-	method puedeAbrirPuertaAgua() = false
+	//method puedeAbrirPuertaFuego() = true
+	//method puedeAbrirPuertaAgua() = false
 
 
 	method presionar()
@@ -97,12 +101,12 @@ object fireboy inherits Personaje (position = game.at(0, 0)) {
 	}
 }
 
-object watergirl inherits Personaje (position = game.at(0, 2)) {
+object watergirl inherits Personaje (position = game.at(0, 2), tipo = agua) {
 	method image() = "watergirl3.png"
 	method tocarFuego(){self.morir()}
 	method tocarAgua(){}
-	method puedeAbrirPuertaFuego() = false
-	method puedeAbrirPuertaAgua() = true
+	//method puedeAbrirPuertaFuego() = false
+	//method puedeAbrirPuertaAgua() = true
 
 	method moverElemento()
 	{

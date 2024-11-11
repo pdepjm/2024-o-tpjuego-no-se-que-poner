@@ -30,8 +30,8 @@ program FireboyAndWatergirl {
 															terceroElevadorPorPalanca.chequearSuPalanca()
 															cuartoElevadorPorPalanca.chequearSuPalanca()})
 	game.onTick(1000, "Chequear puertas", {puertaAgua.chequearPuerta() puertaFuego.chequearPuerta()})
-	game.onTick(1000, "Chequear victoria", {if(juego.condicionesGanadoras()) juego.ganaste()})
-	game.onTick(1000, "Chequear derrota", {if(juego.condicionesPerdedoras()) juego.perdiste()})
+	//game.onTick(1000, "Chequear victoria", {if(juego.condicionesGanadoras()) juego.ganaste()})
+	//game.onTick(1000, "Chequear derrota", {if(juego.condicionesPerdedoras()) juego.perdiste()})
 	
   	soundtrack.shouldLoop(true)
   	game.schedule(500, { soundtrack.play()} )

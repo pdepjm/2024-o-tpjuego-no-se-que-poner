@@ -1,4 +1,5 @@
 import personajes.*
+import mapa.*
 
 class Elemento 
 {
@@ -137,7 +138,7 @@ object cubo inherits Elemento (position = game.at(6, 10))
 {
     method image() = "cubo.png"
     override method puedeSerAtravesado() = false
-    override method puedePresionarBoton() = true
+    
     override method puedeSerMovido() = true
 
     method moverse(desplazamiento)
@@ -153,6 +154,44 @@ object cubo inherits Elemento (position = game.at(6, 10))
 }
 
 class Puerta inherits Elemento
+{
+    const property tipo
+    method puedeAbrirla(personaje) = (tipo == personaje.tipo())
+    const imagenCerrada
+    var property estaAbierta = false
+    //method puedeAbrirPuertaFuego() = false
+	//method puedeAbrirPuertaAgua() = false
+    method image()
+    {
+        if(estaAbierta) return "puertaAbierta.png"
+        return imagenCerrada
+    }
+    
+    method hayAlguienEnPuerta()
+    {
+        const posibles = game.getObjectsIn(self.position())
+        return posibles.any({ p => (self.puedeAbrirla(p) && self!=p) })
+    }
+
+    method chequearPuerta()
+    {
+        if(self.hayAlguienEnPuerta() && !estaAbierta)
+        {
+            estaAbierta = self.hayAlguienEnPuerta()
+            game.sound("puerta.ogg").play()
+        }
+        if (juego.condicionesGanadoras())
+        {
+            juego.ganaste()
+        }
+    }
+}
+
+const puertaFuego = new Puerta(position = game.at(3, 19), imagenCerrada = "puertaFuego.png", tipo = fuego)
+
+const puertaAgua = new Puerta (position = game.at(1, 19), imagenCerrada = "puertaAgua.png", tipo = agua)
+
+/*class Puerta inherits Elemento
 {
     const condicion 
     const imagenCerrada
@@ -183,4 +222,4 @@ class Puerta inherits Elemento
 
 const puertaFuego = new Puerta(position = game.at(3, 19), imagenCerrada = "puertaFuego.png", condicion = {p => p.puedeAbrirPuertaFuego()})
 
-const puertaAgua = new Puerta (position = game.at(1, 19), imagenCerrada = "puertaAgua.png", condicion = {p => p.puedeAbrirPuertaAgua()})
+const puertaAgua = new Puerta (position = game.at(1, 19), imagenCerrada = "puertaAgua.png", condicion = {p => p.puedeAbrirPuertaAgua()})*/

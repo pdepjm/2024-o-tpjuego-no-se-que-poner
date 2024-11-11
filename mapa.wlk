@@ -88,7 +88,7 @@ object fabricaBloquePinchos
 class Bloque
 {
     const property position
-    method puedeSerPresionado() = false
+
     method puedeSerAtravesado() = true
     method puedeSerMovido() = false
 }
@@ -175,7 +175,7 @@ object juego
     }
 
     method condicionesGanadoras() = puertaFuego.estaAbierta() && puertaAgua.estaAbierta() && !unCartelActivo
-    method condicionesPerdedoras() = fireboy.estaMuerto() && watergirl.estaMuerto() && !unCartelActivo
+    method condicionesPerdedoras() = (fireboy.estaMuerto() || watergirl.estaMuerto()) && !unCartelActivo
 }
 
 object cartelGanador

@@ -9,7 +9,7 @@ const bloquePinchos = new BloquePinchos(position = posicion)
 
 describe "Interacciones generales de un personaje" {
   
-  const personaje = new Personaje(position = posicion)
+  const personaje = new Personaje(position = posicion, tipo = fuego)
   test "Moverse a la derecha" 
   {
     personaje.movDerecha()
